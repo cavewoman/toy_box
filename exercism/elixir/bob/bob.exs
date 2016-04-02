@@ -9,34 +9,35 @@ defmodule Bob do
   end
 
   def yelling?(input \\ "") do
-    leftovers = String.strip(String.replace(input, ~r/[\p{Lu}\s\W\d]+\!/u, ""))
-    cond do
-      Bob.silent?(input) -> false
-      leftovers == "" -> true
-      Bob.all_caps?(input) -> true
-      true -> false
-    end
+    Bob.all_caps?(input) or Bob.just_caps?(input)
   end
 
   def all_caps?(input \\ "") do
-    cond do
-      Bob.silent?(input) -> false
-      String.strip(String.replace(input, ~r/[\p{Lu}]/u, "")) == "" -> true
-      true -> false
-    end
+    input
+      |> String.replace(~r/[\p{Lu}\s\W\d]+\!/u, "")
+      |> String.strip
+      |> Bob.equals?("")
+  end
+
+  def just_caps?(input \\ "") do
+    input
+      |> String.replace(~r/[\p{Lu}]/u, "")
+      |> String.strip
+      |> Bob.equals?("")
   end
 
   def question?(input \\ "") do
-    cond do
-      List.last(String.codepoints(input)) == "?" -> true
-      true -> false
-    end 
+    input
+      |> String.codepoints
+      |> List.last
+      |> Bob.equals?("?")
   end
 
   def silent?(input \\ "") do
-    cond do
-      String.strip(input) == "" -> true
-      true -> false
-    end
+    String.strip(input) == ""
+  end
+
+  def equals?(input \\ "", string) do
+    input == string
   end
 end
