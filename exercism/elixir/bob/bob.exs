@@ -16,28 +16,25 @@ defmodule Bob do
     input
       |> String.replace(~r/[\p{Lu}\s\W\d]+\!/u, "")
       |> String.strip
-      |> Bob.equals?("")
+      |> String.equivalent?("")
   end
 
   def just_caps?(input \\ "") do
     input
       |> String.replace(~r/[\p{Lu}]/u, "")
       |> String.strip
-      |> Bob.equals?("")
+      |> String.equivalent?("")
   end
 
   def question?(input \\ "") do
     input
       |> String.codepoints
       |> List.last
-      |> Bob.equals?("?")
+      |> String.equivalent?("?")
   end
 
   def silent?(input \\ "") do
     String.strip(input) == ""
   end
 
-  def equals?(input \\ "", string) do
-    input == string
-  end
 end
