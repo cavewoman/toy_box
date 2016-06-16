@@ -54,3 +54,46 @@ Enum.reduce([1,2,3], 0, fn(x, acc) -> x + acc end)
 3. Enum Reduce with Function Capturing
 Enum.reduce([1,2,3], 0, &+/2)
 ************************
+
+************************
+Enum Map exmaple with a map
+
+Enum.map(%{1 => 2, 3 => 4}, fn {k,v} -> k * v end)
+************************
+
+Ranges
+1..3 => [1, 2, 3]
+
+** Functions in the Enum module are POLYMORPHIC because they can work with diverse data types.
+  -- The functions in Enum are EAGER. Many expect an enumerable and return a list
+
+************************
+Enum filter example
+
+odd? = &(&rem(&1, 2) != 0)
+
+Enum.filter(1..3, odd?)
+  => [1, 3]
+************************
+
+
+************************
+Enums vs Streams
+************************
+
+Enums
+1..100_000
+  |> Enum.map(&(&1 * 3))
+  |> Enum.filter(odd?)
+  |> Enum.sum
+
+Streams
+1..100_000
+  |> Stream.map(&(&1 *3))
+  |> Stream.filter(odd?)
+  |> Enum.sum
+
+Instead of generating intermediate lists streams build a series of computations that are invoked only when we pass the underlying stream to the Enum module. Streams are useful when working with LARGE, possibly INFINITE,  collections
+
+stream = Stream.cycle([1,2,3])
+Enum.take(stream, 10)
