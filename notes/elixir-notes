@@ -97,3 +97,11 @@ Instead of generating intermediate lists streams build a series of computations 
 
 stream = Stream.cycle([1,2,3])
 Enum.take(stream, 10)
+************************
+
+
+************************
+Processes
+************************
+spawn - basic mechanism for spawning new processes
+  ** spawn returns a pid. it executes the given function and then exits
