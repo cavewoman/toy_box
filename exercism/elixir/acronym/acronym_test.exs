@@ -20,12 +20,10 @@ defmodule AcronymTest do
     assert Acronym.abbreviate("HyperText Markup Language") === "HTML"
   end
 
-  @tag :pending
   test "it ignores punctuation" do
     assert Acronym.abbreviate("First in, First out") === "FIFO"
   end
 
-  @tag :pending
   test "produces acronyms ignoring punctuation and casing" do
     assert Acronym.abbreviate("Complementary Metal-Oxide semiconductor") === "CMOS"
   end

@@ -7,27 +7,28 @@ defmodule Acronym do
   def abbreviate(string) do
     string
       |> String.split(~r/\s+/)
-      |> grab_first_letters
+      |> grab_letters
+      |> Enum.join("")
+      |> String.upcase
   end
 
-  def grab_first_letters(words) do
-    Enum.map(words, fn(x) -> get_something(x) end)
+  def grab_letters(words) do
+    Enum.map(words, fn(x) -> collect_letters(String.codepoints(x), "") end)
   end
 
-  def get_something(word) do
-    word
-      |> String.codepoints
-      |> get_all_caps
+  def collect_letters([head|tail], ""),  do: collect_letters(tail, head)
+
+  def collect_letters([head|tail], collected) do
+    cond do
+      is_upcased(head) ->
+        collect_letters(tail, collected <> head)
+      true ->
+        collect_letters(tail, collected)
+    end
   end
 
-  def combine_letters(letters) do
-    Enum.join(letters, "")
-  end
+  def collect_letters([], collected), do: collected
 
-  def get_all_caps(letters) do
-    letters
-      |> Enum.with_index
-      |> Enum.flat_map(fn(x) -> Enum.fetch(Tuple.to_list(x), 0) end)
-  end 
+  def is_upcased(char), do: char =~ ~r/\p{Lu}/u
 
 end
