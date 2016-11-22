@@ -15,12 +15,16 @@ defmodule NucleotideCount do
   def count([], _, count), do: count
 
   @spec histogram([char]) :: map
-  def histogram(strand), do: histogram(@nucleotides, strand, %{})
+  def histogram(strand), do: histogram(to_charlist(strand), %{?A => 0, ?T => 0, ?C => 0, ?G => 0})
 
-  def histogram([head|tail], strand, counted) do
-    histogram(tail, strand, Map.put_new(counted, head, count(strand, head)))
+  def histogram([head|tail], counted) do
+    {_, updated} = Map.get_and_update(counted, head, fn
+      (nil) -> {nil, 1}
+      (current) -> {current, current + 1}   
+    end)
+    histogram(tail, updated)
   end
 
-  def histogram([], _, counted), do: counted
+  def histogram([], counted), do: counted
 
 end
