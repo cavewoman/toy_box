@@ -37,22 +37,18 @@ defmodule BracketPushTest do
     refute BracketPush.check_brackets("{[}]")
   end
 
-  @tag :pending
   test "bracket closure with deeper nesting" do
     refute BracketPush.check_brackets("{[)][]}")
   end
 
-  @tag :pending
   test "bracket closure in a long string of brackets" do
     assert BracketPush.check_brackets("{[]([()])}")
   end
 
-  @tag :pending
   test "should ignore non-bracket characters" do
     assert BracketPush.check_brackets("{hello[]([a()])b}c")
   end
 
-  @tag :pending
   test "string with newlines" do
     assert BracketPush.check_brackets("[]\n{()}\n[(({}))]\n")
   end
