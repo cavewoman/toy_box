@@ -1,0 +1,107 @@
+Typical Elixir project directories
+-- ebin - contians the complied bytecode (Elixir.*.beam)
+-- lib  - contains elixir code (ususally .ex)
+  ** .ex should be compiled (run with exlixirc *.ex)
+-- test - contains test (usually .exs)
+  ** .exs is used for scripting (run with elixir *.exs)
+
+mix is responsible for compiling and setting up proper paths 
+
+def is for public functions (can be called from other modules)
+defp is for private functions (can only be used locally)
+
+Function Capturing
+& in the front the function you want to capture.
+Can define anonymous functions  with function captureing
+fun = &(&1 + 1) == fn x -> x + 1 end
+  ** &1 is the first arguement &2 is the second. You cannot use &2 without &1
+To capture function from module do &Module.function()
+  ** fun = &List.flatten(&1, &2)
+
+************************
+These do the same things
+
+1. Recursion 
+defmodule Math do
+  def double_each([head | tail]), do: [head * 2 | double_each(tail)]
+
+  def double_each([]), do: []
+end
+
+2. Enum Map
+Enum.map([1, 2,3], fn(x) -> x*2 end)
+
+3. Enum Map with Function Capturing
+Enum.map([1,2,3], &(&1 * 2)))
+************************
+
+
+************************
+These also do the same things
+
+1. Recursion
+defmodule Math do
+  def sum_list([head | tail], accumulator), do: sum_list(tail, sum(head, accumulator))
+
+  def sum_list([], accumulator), do: accumulator
+  
+  def sum(a,b), do: a + b
+end
+
+2. Enum Reduce
+Enum.reduce([1,2,3], 0, fn(x, acc) -> x + acc end)
+
+3. Enum Reduce with Function Capturing
+Enum.reduce([1,2,3], 0, &+/2)
+************************
+
+************************
+Enum Map exmaple with a map
+
+Enum.map(%{1 => 2, 3 => 4}, fn {k,v} -> k * v end)
+************************
+
+Ranges
+1..3 => [1, 2, 3]
+
+** Functions in the Enum module are POLYMORPHIC because they can work with diverse data types.
+  -- The functions in Enum are EAGER. Many expect an enumerable and return a list
+
+************************
+Enum filter example
+
+odd? = &(&rem(&1, 2) != 0)
+
+Enum.filter(1..3, odd?)
+  => [1, 3]
+************************
+
+
+************************
+Enums vs Streams
+************************
+
+Enums
+1..100_000
+  |> Enum.map(&(&1 * 3))
+  |> Enum.filter(odd?)
+  |> Enum.sum
+
+Streams
+1..100_000
+  |> Stream.map(&(&1 *3))
+  |> Stream.filter(odd?)
+  |> Enum.sum
+
+Instead of generating intermediate lists streams build a series of computations that are invoked only when we pass the underlying stream to the Enum module. Streams are useful when working with LARGE, possibly INFINITE,  collections
+
+stream = Stream.cycle([1,2,3])
+Enum.take(stream, 10)
+************************
+
+
+************************
+Processes
+************************
+spawn - basic mechanism for spawning new processes
+  ** spawn returns a pid. it executes the given function and then exits
